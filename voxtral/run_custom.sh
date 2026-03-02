@@ -55,6 +55,17 @@ do
         --batch_size=${BATCH_SIZE} \
         --max_eval_samples=-1
 
+    # --- Common Voice Spontaneous 2.0 (fr) ---
+    python run_eval.py \
+        --model_id=${MODEL_ID} \
+        --dataset_path="/scratch/jmartel/datasets/sps-corpus-2.0-2025-12-05-fr" \
+        --dataset="spontaneous" \
+        --tsv_file="ss-corpus-fr.tsv" \
+        --audio_dir="audios" \
+        --split="full" \
+        --batch_size=${BATCH_SIZE} \
+        --max_eval_samples=-1
+
     # Evaluate results
     RUNDIR=`pwd` && \
     cd ../normalizer && \

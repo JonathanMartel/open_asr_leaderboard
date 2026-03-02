@@ -67,13 +67,20 @@ def main(args):
         return batch
 
 
-    cv_tsv = os.path.join(args.dataset_path, f"{args.split}.tsv")
-    if os.path.exists(cv_tsv):
-        # Format brut Mozilla Common Voice (TSV + clips/)
-        clips_dir = os.path.join(args.dataset_path, "clips")
-        df = pd.read_csv(cv_tsv, sep="\t", usecols=["path", "sentence"])
-        df["audio"] = clips_dir + os.sep + df["path"]
-        df = df.drop(columns=["path"])
+    tsv_filename = args.tsv_file if args.tsv_file else f"{args.split}.tsv"
+    tsv_path = os.path.join(args.dataset_path, tsv_filename)
+    if os.path.exists(tsv_path):
+        # Format brut corpus TSV (Common Voice, spontané, etc.)
+        audio_dir = os.path.join(args.dataset_path, args.audio_dir)
+        df = pd.read_csv(tsv_path, sep="\t")
+        # Détection automatique de la colonne audio (CV: "path", spontané: "audio_file")
+        audio_col = next((c for c in ["path", "audio_file"] if c in df.columns), None)
+        if audio_col is None:
+            raise ValueError(f"Aucune colonne audio trouvée. Colonnes disponibles : {list(df.columns)}")
+        df["audio"] = audio_dir + os.sep + df[audio_col]
+        # Garder uniquement la colonne audio et la/les colonne(s) de texte reconnues
+        text_cols = [c for c in ["sentence", "transcription", "text", "normalized_text", "transcript"] if c in df.columns]
+        df = df[["audio"] + text_cols]
         ds = Dataset.from_pandas(df, preserve_index=False)
     else:
         ds = load_dataset(args.dataset_path, args.dataset_config, split=args.split, trust_remote_code=True)
@@ -163,6 +170,20 @@ if __name__ == "__main__":
         type=str,
         default="test",
         help="Split of the dataset. *E.g.* `'validation`' for the dev split, or `'test'` for the test split.",
+    )
+    parser.add_argument(
+        "--tsv_file",
+        type=str,
+        default=None,
+        help="Nom du fichier TSV pour les corpus bruts. Par défaut : '{split}.tsv'. "
+             "Utiliser pour les corpus non-standard (ex: 'ss-corpus-fr.tsv').",
+    )
+    parser.add_argument(
+        "--audio_dir",
+        type=str,
+        default="clips",
+        help="Sous-dossier contenant les fichiers audio. Défaut: 'clips' (Common Voice). "
+             "Utiliser 'audios' pour le corpus spontané.",
     )
     parser.add_argument(
         "--device",
