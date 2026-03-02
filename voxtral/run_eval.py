@@ -17,12 +17,15 @@ def main(args):
     # Load Voxtral model using transformers
     print(f"Loading model: {args.model_id}")
     processor = AutoProcessor.from_pretrained(args.model_id)
+    device_map = "auto" if args.device < 0 else f"cuda:{args.device}"
     model = VoxtralForConditionalGeneration.from_pretrained(
         args.model_id,
         torch_dtype=torch.bfloat16,
-        device_map=f"cuda:{args.device}" if args.device >= 0 else "cpu",
+        device_map=device_map,
     )
     model.eval()
+    # Résoudre le device cible pour les inputs (device_map="auto" rend model.device ambigu)
+    infer_device = next(model.parameters()).device
 
     def benchmark(batch):
         # Load audio inputs
@@ -44,7 +47,7 @@ def main(args):
                 format=["wav"],
                 model_id=args.model_id,
             )
-            inputs = inputs.to(model.device, dtype=torch.bfloat16)
+            inputs = inputs.to(infer_device, dtype=torch.bfloat16)
 
             with torch.no_grad():
                 outputs = model.generate(**inputs, max_new_tokens=args.max_new_tokens)
@@ -201,7 +204,7 @@ if __name__ == "__main__":
         "--device",
         type=int,
         default=-1,
-        help="The device to run the pipeline on. -1 for CPU (default), 0 for the first GPU and so on.",
+        help="GPU à utiliser : -1 = device_map='auto' (tous les GPUs disponibles, défaut), 0 = cuda:0, 1 = cuda:1, etc.",
     )
     parser.add_argument(
         "--batch_size",
