@@ -67,7 +67,7 @@ do
         --max_eval_samples=200
 
     # --- Common Voice Spontaneous 2.0 (fr) ---
-    python run_eval.py \
+    python /scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py \
         --model_id=${MODEL_ID} \
         --dataset_path="/scratch/jmartel/datasets/sps-corpus-2.0-2025-12-05-fr" \
         --dataset="spontaneous" \
@@ -80,7 +80,7 @@ do
 
     # Evaluate results
     RUNDIR=`pwd` && \
-    cd ../normalizer && \
+    cd /scratch/jmartel/open_asr_leaderboard/normalizer && \
     python -c "import eval_utils; eval_utils.score_results('${RUNDIR}/results', '${MODEL_ID}')" && \
     cd $RUNDIR
 
