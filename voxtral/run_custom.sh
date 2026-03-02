@@ -8,7 +8,7 @@
 #SBATCH --gpus-per-node=a100:2
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=96G
-#SBATCH --time=1:00:00
+#SBATCH --time=2:00:00
 
 module --force purge
 module load StdEnv/2023 gcc/12.3 openmpi/4.1.5 cuda/12.9 python/3.13.2 \
@@ -24,7 +24,7 @@ export PYTHONPATH="..":$PYTHONPATH
 
 MODEL_IDs=(
     "/scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16"
-#    "/scratch/jmartel/models/Voxtral-Small-24B-2507"
+    "/scratch/jmartel/models/Voxtral-Small-24B-2507"
 )
 
 BATCH_SIZE=8
@@ -36,7 +36,7 @@ do
     MODEL_ID=${MODEL_IDs[$i]}
 
     # --- Google FLEURS (fr_fr) ---
-    python run_eval.py \
+    python /scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py \
         --model_id=${MODEL_ID} \
         --dataset_path="/scratch/jmartel/datasets/fleurs" \
         --dataset="fleurs" \
@@ -46,7 +46,7 @@ do
         --max_eval_samples=-1
 
     # --- Mozilla Common Voice 24.0 (fr) ---
-    python run_eval.py \
+    python /scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py \
         --model_id=${MODEL_ID} \
         --dataset_path="/scratch/jmartel/datasets/cv-corpus-24.0-2025-12-05/fr" \
         --dataset="common_voice" \
@@ -56,7 +56,7 @@ do
         --max_eval_samples=200
 
     # --- Mozilla Common Voice 24.0 - Français du Canada (validated) ---
-    python run_eval.py \
+    python /scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py \
         --model_id=${MODEL_ID} \
         --dataset_path="/scratch/jmartel/datasets/cv-corpus-24.0-2025-12-05/fr" \
         --dataset="common_voice_fr_ca" \
