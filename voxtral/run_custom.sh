@@ -55,6 +55,17 @@ do
         --batch_size=${BATCH_SIZE} \
         --max_eval_samples=-1
 
+    # --- Mozilla Common Voice 24.0 - Français du Canada (validated) ---
+    python run_eval.py \
+        --model_id=${MODEL_ID} \
+        --dataset_path="/scratch/jmartel/datasets/cv-corpus-24.0-2025-12-05/fr" \
+        --dataset="common_voice_fr_ca" \
+        --tsv_file="validated.tsv" \
+        --accent_filter="Français du Canada" \
+        --split="validated" \
+        --batch_size=${BATCH_SIZE} \
+        --max_eval_samples=-1
+
     # --- Common Voice Spontaneous 2.0 (fr) ---
     python run_eval.py \
         --model_id=${MODEL_ID} \

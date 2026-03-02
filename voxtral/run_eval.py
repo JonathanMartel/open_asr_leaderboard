@@ -78,6 +78,11 @@ def main(args):
         if audio_col is None:
             raise ValueError(f"Aucune colonne audio trouvée. Colonnes disponibles : {list(df.columns)}")
         df["audio"] = audio_dir + os.sep + df[audio_col]
+        # Filtrage par accent si demandé (ex: "Français du Canada")
+        if args.accent_filter and "accents" in df.columns:
+            before = len(df)
+            df = df[df["accents"] == args.accent_filter]
+            print(f"Filtrage accent '{args.accent_filter}' : {before} → {len(df)} entrées")
         # Garder uniquement la colonne audio et la/les colonne(s) de texte reconnues
         text_cols = [c for c in ["sentence", "transcription", "text", "normalized_text", "transcript"] if c in df.columns]
         df = df[["audio"] + text_cols]
@@ -184,6 +189,13 @@ if __name__ == "__main__":
         default="clips",
         help="Sous-dossier contenant les fichiers audio. Défaut: 'clips' (Common Voice). "
              "Utiliser 'audios' pour le corpus spontané.",
+    )
+    parser.add_argument(
+        "--accent_filter",
+        type=str,
+        default=None,
+        help="Filtrer les entrées par valeur de la colonne 'accents' du TSV. "
+             "Ex: 'Français du Canada' pour isoler le français canadien.",
     )
     parser.add_argument(
         "--device",
