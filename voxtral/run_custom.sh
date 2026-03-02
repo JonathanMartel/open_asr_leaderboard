@@ -6,8 +6,8 @@
 #SBATCH --mail-user=martel.jonathan@uqam.ca
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --gpus-per-node=a100:2
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=48G
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=96G
 #SBATCH --time=1:00:00
 
 module --force purge

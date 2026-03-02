@@ -4,7 +4,7 @@ import torch
 from transformers import VoxtralForConditionalGeneration, AutoProcessor
 import evaluate
 import pandas as pd
-from datasets import load_dataset, load_from_disk, Audio, Dataset
+from datasets import load_dataset, load_from_disk, Audio, Dataset, Features, Value
 from normalizer import data_utils
 import time
 from tqdm import tqdm
@@ -88,8 +88,10 @@ def main(args):
             print(f"Filtrage accent '{args.accent_filter}' : {before} → {len(df)} entrées")
         # Garder uniquement la colonne audio et la/les colonne(s) de texte reconnues
         text_cols = [c for c in ["sentence", "transcription", "text", "normalized_text", "transcript"] if c in df.columns]
-        df = df[["audio"] + text_cols]
-        ds = Dataset.from_pandas(df, preserve_index=False)
+        # Créer avec features explicites : Audio() évite l'erreur "large_string → struct" de PyArrow
+        features = Features({"audio": Audio(), **{col: Value("string") for col in text_cols}})
+        ds_dict = {"audio": df["audio"].tolist(), **{col: df[col].fillna("").tolist() for col in text_cols}}
+        ds = Dataset.from_dict(ds_dict, features=features)
     else:
         ds = load_dataset(args.dataset_path, args.dataset_config, split=args.split, trust_remote_code=True)
     print(ds)
