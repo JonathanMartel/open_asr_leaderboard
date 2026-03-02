@@ -3,11 +3,14 @@ import os
 import torch
 from transformers import VoxtralForConditionalGeneration, AutoProcessor
 import evaluate
+from datasets import load_dataset, load_from_disk, Audio
 from normalizer import data_utils
 import time
 from tqdm import tqdm
 
-wer_metric = evaluate.load("wer")
+os.environ['HF_EVALUATE_OFFLINE'] = '1'
+
+wer_metric = evaluate.load("/scratch/jmartel/evaluate/metrics/wer/wer.py")
 
 def main(args):
     # Load Voxtral model using transformers
@@ -34,7 +37,7 @@ def main(args):
         pred_text = []
         for audio in audios:
             inputs = processor.apply_transcription_request(
-                language="en",  # English for benchmark consistency
+                language="fr",  # English for benchmark consistency
                 audio=audio,
                 model_id=args.model_id,
             )
@@ -60,29 +63,15 @@ def main(args):
         batch["references"] = batch["norm_text"]
         return batch
 
-    if args.warmup_steps is not None:
-        warmup_dataset = data_utils.load_data(args)
-        warmup_dataset = data_utils.prepare_data(warmup_dataset)
 
-        num_warmup_samples = args.warmup_steps * args.batch_size
-        if args.streaming:
-            warmup_dataset = warmup_dataset.take(num_warmup_samples)
-        else:
-            warmup_dataset = warmup_dataset.select(range(min(num_warmup_samples, len(warmup_dataset))))
-        warmup_dataset = iter(warmup_dataset.map(benchmark, batch_size=args.batch_size, batched=True))
+#    dataset = data_utils.load_data(args)
+    ds = load_dataset(args.dataset_path, "fr_fr", split="test", trust_remote_code=True)
+    print(ds)
 
-        for _ in tqdm(warmup_dataset, desc="Warming up..."):
-            continue
+    dataset = ds.cast_column("audio", Audio(sampling_rate=16000))
 
-    dataset = data_utils.load_data(args)
     dataset = data_utils.prepare_data(dataset)
-
-    if args.max_eval_samples is not None and args.max_eval_samples > 0:
-        print(f"Subsampling dataset to first {args.max_eval_samples} samples!")
-        if args.streaming:
-            dataset = dataset.take(args.max_eval_samples)
-        else:
-            dataset = dataset.select(range(min(args.max_eval_samples, len(dataset))))
+    print(dataset)
 
     dataset = dataset.map(
         benchmark, batch_size=args.batch_size, batched=True, remove_columns=["audio"],

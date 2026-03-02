@@ -1,258 +1,356 @@
-# Open ASR Leaderboard
+---
+annotations_creators:
+- expert-generated
+- crowdsourced
+- machine-generated
+language_creators:
+- crowdsourced
+- expert-generated
+language:
+- afr
+- amh
+- ara
+- asm
+- ast
+- azj
+- bel
+- ben
+- bos
+- cat
+- ceb
+- cmn
+- ces
+- cym
+- dan
+- deu
+- ell
+- eng
+- spa
+- est
+- fas
+- ful
+- fin
+- tgl
+- fra
+- gle
+- glg
+- guj
+- hau
+- heb
+- hin
+- hrv
+- hun
+- hye
+- ind
+- ibo
+- isl
+- ita
+- jpn
+- jav
+- kat
+- kam
+- kea
+- kaz
+- khm
+- kan
+- kor
+- ckb
+- kir
+- ltz
+- lug
+- lin
+- lao
+- lit
+- luo
+- lav
+- mri
+- mkd
+- mal
+- mon
+- mar
+- msa
+- mlt
+- mya
+- nob
+- npi
+- nld
+- nso
+- nya
+- oci
+- orm
+- ory
+- pan
+- pol
+- pus
+- por
+- ron
+- rus
+- bul
+- snd
+- slk
+- slv
+- sna
+- som
+- srp
+- swe
+- swh
+- tam
+- tel
+- tgk
+- tha
+- tur
+- ukr
+- umb
+- urd
+- uzb
+- vie
+- wol
+- xho
+- yor
+- yue
+- zul
+license:
+- cc-by-4.0
+multilinguality:
+- multilingual
+size_categories:
+- 10K<n<100K
+task_categories:
+- automatic-speech-recognition
+task_ids: []
+pretty_name: 'The Cross-lingual TRansfer Evaluation of Multilingual Encoders for Speech
+  (XTREME-S) benchmark is a benchmark designed to evaluate speech representations
+  across languages, tasks, domains and data regimes. It covers 102 languages from
+  10+ language families, 3 different domains and 4 task families: speech recognition,
+  translation, classification and retrieval.'
+tags:
+- speech-recognition
+---
 
-This repository contains the code for the Open ASR Leaderboard. The leaderboard is a Gradio Space that allows users to compare the accuracy of ASR models on a variety of datasets. The leaderboard is hosted at [hf-audio/open_asr_leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard).
+# FLEURS
 
-# Datasets
+## Dataset Description
 
-The Open ASR Leaderboard evaluates models on a diverse set of publicly available ASR benchmarks hosted on the Hugging Face Hub. These datasets cover a wide range of domains, languages, and recording conditions to provide a fair and comprehensive comparison across models.
+- **Fine-Tuning script:** [pytorch/speech-recognition](https://github.com/huggingface/transformers/tree/main/examples/pytorch/speech-recognition)
+- **Paper:** [FLEURS: Few-shot Learning Evaluation of
+Universal Representations of Speech](https://arxiv.org/abs/2205.12446)
+- **Total amount of disk used:** ca. 350 GB
 
-* **Core Test Sets (English, sorted, test-only):**
-  The main benchmark datasets used for evaluation are available here: [**ESB test-only sorted collection**](https://huggingface.co/datasets/hf-audio/esb-datasets-test-only-sorted).
+Fleurs is the speech version of the [FLoRes machine translation benchmark](https://arxiv.org/abs/2106.03193). 
+We use 2009 n-way parallel sentences from the FLoRes dev and devtest publicly available sets, in 102 languages. 
 
-* **Long-form Benchmark (recent addition):**
-  The [**ASR Longform benchmark**](https://huggingface.co/datasets/hf-audio/asr-leaderboard-longform) dataset includes earnings21, earnings22 and tedlium longform.
+Training sets have around 10 hours of supervision. Speakers of the train sets are different than speakers from the dev/test sets. Multilingual fine-tuning is
+used and ”unit error rate” (characters, signs) of all languages is averaged. Languages and results are also grouped into seven geographical areas: 
 
-* **Multilingual Benchmark (recent addition):**
-  The [**ASR Multilingual benchmark**](https://huggingface.co/datasets/nithinraok/asr-leaderboard-datasets) dataset includes fleurs, mcv and mls multilingual.
+- **Western Europe**: *Asturian, Bosnian, Catalan, Croatian, Danish, Dutch, English, Finnish, French, Galician, German, Greek, Hungarian, Icelandic, Irish, Italian, Kabuverdianu, Luxembourgish, Maltese, Norwegian, Occitan, Portuguese, Spanish, Swedish, Welsh* 
+- **Eastern Europe**: *Armenian, Belarusian, Bulgarian, Czech, Estonian, Georgian, Latvian, Lithuanian, Macedonian, Polish, Romanian, Russian, Serbian, Slovak, Slovenian, Ukrainian*
+- **Central-Asia/Middle-East/North-Africa**: *Arabic, Azerbaijani, Hebrew, Kazakh, Kyrgyz, Mongolian, Pashto, Persian, Sorani-Kurdish, Tajik, Turkish, Uzbek*
+- **Sub-Saharan Africa**: *Afrikaans, Amharic, Fula, Ganda, Hausa, Igbo, Kamba, Lingala, Luo, Northern-Sotho, Nyanja, Oromo, Shona, Somali, Swahili, Umbundu, Wolof, Xhosa, Yoruba, Zulu*
+- **South-Asia**: *Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam, Marathi, Nepali, Oriya, Punjabi, Sindhi, Tamil, Telugu, Urdu*
+- **South-East Asia**: *Burmese, Cebuano, Filipino, Indonesian, Javanese, Khmer, Lao, Malay, Maori, Thai, Vietnamese*
+- **CJK languages**: *Cantonese and Mandarin Chinese, Japanese, Korean*
 
-# Requirements
 
-Each library has its own set of requirements. We recommend using a clean conda environment, with Python 3.10 or above.
+## How to use & Supported Tasks
 
-1) Clone this repository.
-2) Install PyTorch by following the instructions here: https://pytorch.org/get-started/locally/
-3) Install the common requirements for all library by running `pip install -r requirements/requirements.txt`.
-4) Install the requirements for each library you wish to evaluate by running `pip install -r requirements/requirements_<library_name>.txt`.
-5) Connect your Hugging Face account by running `huggingface-cli login`.
+### How to use
 
-**Note:** If you wish to run NeMo, the benchmark currently needs CUDA 12.6 to fix a problem in previous drivers for RNN-T inference with cooperative kernels inside conditional nodes (see here: https://github.com/NVIDIA/NeMo/pull/9869). Running `nvidia-smi` should output "CUDA Version: 12.6" or higher.
+The `datasets` library allows you to load and pre-process your dataset in pure Python, at scale. The dataset can be downloaded and prepared in one call to your local drive by using the `load_dataset` function. 
 
-# Evaluate a model
+For example, to download the Hindi config, simply specify the corresponding language config name (i.e., "hi_in" for Hindi):
+```python
+from datasets import load_dataset
+fleurs = load_dataset("google/fleurs", "hi_in", split="train")
+```
 
-Each library has a script `run_eval.py` that acts as the entry point for evaluating a model. The script is run by the corresponding bash script for each model that is being evaluated. The script then outputs a JSONL file containing the predictions of the model on each dataset, and summarizes the Word Error Rate (WER) and Inverse Real-Time Factor (RTFx) of the model on each dataset after completion.
+Using the datasets library, you can also stream the dataset on-the-fly by adding a `streaming=True` argument to the `load_dataset` function call. Loading a dataset in streaming mode loads individual samples of the dataset at a time, rather than downloading the entire dataset to disk.
+```python
+from datasets import load_dataset
+fleurs = load_dataset("google/fleurs", "hi_in", split="train", streaming=True)
+print(next(iter(fleurs)))
+```
 
-To reproduce existing results:
+*Bonus*: create a [PyTorch dataloader](https://huggingface.co/docs/datasets/use_with_pytorch) directly with your own datasets (local/streamed).
 
-1) Change directory into the library you wish to evaluate. For example, `cd transformers`.
-2) Run the bash script for the model you wish to evaluate. For example, `bash run_wav2vec2.sh`.
-
-**Note**: All evaluations were run using an NVIDIA A100-SXM4-80GB GPU, with NVIDIA driver 560.28.03, CUDA 12.6, and PyTorch 2.4.0. You should ensure you use the same configuration when submitting results. If you are unable to create an equivalent machine, please request one of the maintainers to run your scripts for evaluation! 
-
-# Add a new library
-
-To add a new library for evaluation in this benchmark, please follow the steps below:
-
-1) Fork this repository and create a new branch
-2) Create a new directory for your library. For example, `mkdir transformers`.
-3) Copy the template `run_eval.py` script below into your new directory. The script should be updated for the new library by making two modifications. Otherwise, please try to keep the structure of the script the same as in the template. In particular, the data loading, evaluation and manifest writing must be done in the same way as other libraries for consistency.
-   1) Update the model loading logic in the `main` function
-   2) Update the inference logic in the `benchmark` function
-
-<details>
-
-<summary> Template script for Transformers: </summary>
+Local:
 
 ```python
-import argparse
-import os
-import torch
-from transformers import WhisperForConditionalGeneration, WhisperProcessor
-import evaluate
-from normalizer import data_utils
-import time
-from tqdm import tqdm
-
-wer_metric = evaluate.load("wer")
-
-def main(args):
-    # Load model (FILL ME!)
-    model = WhisperForConditionalGeneration.from_pretrained(args.model_id, torch_dtype=torch.bfloat16).to(args.device)
-    processor = WhisperProcessor.from_pretrained(args.model_id)
-
-    def benchmark(batch):
-        # Load audio inputs
-        audios = [audio["array"] for audio in batch["audio"]]
-        batch["audio_length_s"] = [len(audio) / batch["audio"][0]["sampling_rate"] for audio in audios]
-        minibatch_size = len(audios)
-
-        # Start timing
-        start_time = time.time()
-
-        # INFERENCE (FILL ME! Replacing 1-3 with steps from your library)
-        # 1. Pre-processing
-        inputs = processor(audios, sampling_rate=16_000, return_tensors="pt").to(args.device)
-        inputs["input_features"] = inputs["input_features"].to(torch.bfloat16)
-        # 2. Generation
-        pred_ids = model.generate(**inputs)
-        # 3. Post-processing
-        pred_text = processor.batch_decode(pred_ids, skip_special_tokens=True)
-
-        # End timing
-        runtime = time.time() - start_time
-
-        # normalize by minibatch size since we want the per-sample time
-        batch["transcription_time_s"] = minibatch_size * [runtime / minibatch_size]
-
-        # normalize transcriptions with English normalizer
-        batch["predictions"] = [data_utils.normalizer(pred) for pred in pred_text]
-        batch["references"] = batch["norm_text"]
-        return batch
-
-    if args.warmup_steps is not None:
-        warmup_dataset = data_utils.load_data(args)
-        warmup_dataset = data_utils.prepare_data(warmup_dataset)
-
-        num_warmup_samples = args.warmup_steps * args.batch_size
-        if args.streaming:
-            warmup_dataset = warmup_dataset.take(num_warmup_samples)
-        else:
-            warmup_dataset = warmup_dataset.select(range(min(num_warmup_samples, len(warmup_dataset))))
-        warmup_dataset = iter(warmup_dataset.map(benchmark, batch_size=args.batch_size, batched=True))
-
-        for _ in tqdm(warmup_dataset, desc="Warming up..."):
-            continue
-
-    dataset = data_utils.load_data(args)
-    dataset = data_utils.prepare_data(dataset)
-
-    if args.max_eval_samples is not None and args.max_eval_samples > 0:
-        print(f"Subsampling dataset to first {args.max_eval_samples} samples!")
-        if args.streaming:
-            dataset = dataset.take(args.max_eval_samples)
-        else:
-            dataset = dataset.select(range(min(args.max_eval_samples, len(dataset))))
-
-    dataset = dataset.map(
-        benchmark, batch_size=args.batch_size, batched=True, remove_columns=["audio"],
-    )
-
-    all_results = {
-        "audio_length_s": [],
-        "transcription_time_s": [],
-        "predictions": [],
-        "references": [],
-    }
-    result_iter = iter(dataset)
-    for result in tqdm(result_iter, desc="Samples..."):
-        for key in all_results:
-            all_results[key].append(result[key])
-
-    # Write manifest results (WER and RTFX)
-    manifest_path = data_utils.write_manifest(
-        all_results["references"],
-        all_results["predictions"],
-        args.model_id,
-        args.dataset_path,
-        args.dataset,
-        args.split,
-        audio_length=all_results["audio_length_s"],
-        transcription_time=all_results["transcription_time_s"],
-    )
-    print("Results saved at path:", os.path.abspath(manifest_path))
-
-    wer = wer_metric.compute(
-        references=all_results["references"], predictions=all_results["predictions"]
-    )
-    wer = round(100 * wer, 2)
-    rtfx = round(sum(all_results["audio_length_s"]) / sum(all_results["transcription_time_s"]), 2)
-    print("WER:", wer, "%", "RTFx:", rtfx)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        "--model_id",
-        type=str,
-        required=True,
-        help="Model identifier. Should be loadable with 🤗 Transformers",
-    )
-    parser.add_argument(
-        "--dataset_path",
-        type=str,
-        default="esb/datasets",
-        help="Dataset path. By default, it is `esb/datasets`",
-    )
-    parser.add_argument(
-        "--dataset",
-        type=str,
-        required=True,
-        help="Dataset name. *E.g.* `'librispeech_asr` for the LibriSpeech ASR dataset, or `'common_voice'` for Common Voice. The full list of dataset names "
-        "can be found at `https://huggingface.co/datasets/esb/datasets`",
-    )
-    parser.add_argument(
-        "--split",
-        type=str,
-        default="test",
-        help="Split of the dataset. *E.g.* `'validation`' for the dev split, or `'test'` for the test split.",
-    )
-    parser.add_argument(
-        "--device",
-        type=int,
-        default=-1,
-        help="The device to run the pipeline on. -1 for CPU (default), 0 for the first GPU and so on.",
-    )
-    parser.add_argument(
-        "--batch_size",
-        type=int,
-        default=1,
-        help="Number of samples to go through each streamed batch.",
-    )
-    parser.add_argument(
-        "--max_eval_samples",
-        type=int,
-        default=None,
-        help="Number of samples to be evaluated. Put a lower number e.g. 64 for testing this script.",
-    )
-    parser.add_argument(
-        "--no-streaming",
-        dest="streaming",
-        action="store_false",
-        help="Choose whether you'd like to download the entire dataset or stream it during the evaluation.",
-    )
-    parser.add_argument(
-        "--warmup_steps",
-        type=int,
-        default=10,
-        help="Number of warm-up steps to run before launching the timed runs.",
-    )
-    args = parser.parse_args()
-    parser.set_defaults(streaming=False)
-
-    main(args)
-
+from datasets import load_dataset
+from torch.utils.data.sampler import BatchSampler, RandomSampler
+fleurs = load_dataset("google/fleurs", "hi_in", split="train")
+batch_sampler = BatchSampler(RandomSampler(fleurs), batch_size=32, drop_last=False)
+dataloader = DataLoader(fleurs, batch_sampler=batch_sampler)
 ```
 
-</details>
+Streaming:
 
-4) Create one bash file per model type following the conversion `run_<model_type>.sh`.
-    - The bash script should follow the same steps as other libraries. You can copy the example for [run_whisper.sh](./transformers/run_whisper.sh) and update it to your library
-    - Different model sizes of the same type should share the script. For example `Wav2Vec` and `Wav2Vec2` would be two separate scripts, but different size of `Wav2Vec2` would be part of the same script.
-    - **Important:** for a given model, you can tune decoding hyper-parameters to maximize benchmark performance (e.g. batch size, beam size, etc.). However, you must use the **same decoding hyper-parameters** for each dataset in the benchmark. For more details, refer to the [ESB paper](https://arxiv.org/abs/2210.13352).
-5) Submit a PR for your changes.
-
-# Add a new model
-
-To add a model from a new library for evaluation in this benchmark, you can follow the steps noted above.
-
-To add a model from an existing library, we can simplify the steps to:
-
-1) If the model is already supported, but of a different size, simply add the new model size to the list of models run by the corresponding bash script.
-2) If the model is entirely new, create a new bash script based on others of that library and add the new model and its sizes to that script.
-3) Run the evaluation script to obtain a list of predictions for the new model on each of the datasets.
-4) Submit a PR for your changes.
-
-# Citation 
-
-
-```bibtex
-@misc{srivastav2025openasrleaderboardreproducible,
-      title={Open ASR Leaderboard: Towards Reproducible and Transparent Multilingual and Long-Form Speech Recognition Evaluation}, 
-      author={Vaibhav Srivastav and Steven Zheng and Eric Bezzam and Eustache Le Bihan and Nithin Koluguri and Piotr Żelasko and Somshubra Majumdar and Adel Moumen and Sanchit Gandhi},
-      year={2025},
-      eprint={2510.06961},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2510.06961}, 
-}
+```python
+from datasets import load_dataset
+from torch.utils.data import DataLoader
+fleurs = load_dataset("google/fleurs", "hi_in", split="train")
+dataloader = DataLoader(fleurs, batch_size=32)
 ```
+
+To find out more about loading and preparing audio datasets, head over to [hf.co/blog/audio-datasets](https://huggingface.co/blog/audio-datasets).
+
+### Example scripts
+
+Train your own CTC or Seq2Seq Automatic Speech Recognition models on FLEURS with `transformers` - [here](https://github.com/huggingface/transformers/tree/main/examples/pytorch/speech-recognition).
+
+Fine-tune your own Language Identification models on FLEURS with `transformers` - [here](https://github.com/huggingface/transformers/tree/main/examples/pytorch/audio-classification)
+
+### 1. Speech Recognition (ASR)
+
+```py
+from datasets import load_dataset
+
+fleurs_asr = load_dataset("google/fleurs", "af_za")  # for Afrikaans
+# to download all data for multi-lingual fine-tuning uncomment following line
+# fleurs_asr = load_dataset("google/fleurs", "all")
+
+# see structure
+print(fleurs_asr)
+
+# load audio sample on the fly
+audio_input = fleurs_asr["train"][0]["audio"]  # first decoded audio sample
+transcription = fleurs_asr["train"][0]["transcription"]  # first transcription
+# use `audio_input` and `transcription` to fine-tune your model for ASR
+
+# for analyses see language groups
+all_language_groups = fleurs_asr["train"].features["lang_group_id"].names
+lang_group_id = fleurs_asr["train"][0]["lang_group_id"]
+
+all_language_groups[lang_group_id]
+```
+
+### 2. Language Identification
+
+LangID can often be a domain classification, but in the case of FLEURS-LangID, recordings are done in a similar setting across languages and the utterances correspond to n-way parallel sentences, in the exact same domain, making this task particularly relevant for evaluating LangID. The setting is simple, FLEURS-LangID is splitted in train/valid/test for each language. We simply create a single train/valid/test for LangID by merging all.
+
+```py
+from datasets import load_dataset
+
+fleurs_langID = load_dataset("google/fleurs", "all") # to download all data
+
+# see structure
+print(fleurs_langID)
+
+# load audio sample on the fly
+audio_input = fleurs_langID["train"][0]["audio"]  # first decoded audio sample
+language_class = fleurs_langID["train"][0]["lang_id"]  # first id class
+language = fleurs_langID["train"].features["lang_id"].names[language_class]
+
+# use audio_input and language_class to fine-tune your model for audio classification
+```
+
+### 3. Retrieval
+
+Retrieval provides n-way parallel speech and text data. Similar to how XTREME for text leverages Tatoeba to evaluate bitext mining a.k.a sentence translation retrieval, we use Retrieval to evaluate the quality of fixed-size representations of speech utterances. Our goal is to incentivize the creation of fixed-size speech encoder for speech retrieval. The system has to retrieve the English "key" utterance corresponding to the speech translation of "queries" in 15 languages. Results have to be reported on the test sets of Retrieval whose utterances are used as queries (and keys for English). We augment the English keys with a large number of utterances to make the task more difficult.
+
+```py
+from datasets import load_dataset
+
+fleurs_retrieval = load_dataset("google/fleurs", "af_za")  # for Afrikaans
+# to download all data for multi-lingual fine-tuning uncomment following line
+# fleurs_retrieval = load_dataset("google/fleurs", "all")
+
+# see structure
+print(fleurs_retrieval)
+
+# load audio sample on the fly
+audio_input = fleurs_retrieval["train"][0]["audio"]  # decoded audio sample
+text_sample_pos = fleurs_retrieval["train"][0]["transcription"]  # positive text sample
+text_sample_neg = fleurs_retrieval["train"][1:20]["transcription"] # negative text samples
+
+# use `audio_input`, `text_sample_pos`, and `text_sample_neg` to fine-tune your model for retrieval
+```
+
+Users can leverage the training (and dev) sets of FLEURS-Retrieval with a ranking loss to build better cross-lingual fixed-size representations of speech.
+
+## Dataset Structure
+
+We show detailed information the example configurations `af_za` of the dataset.
+All other configurations have the same structure.
+
+### Data Instances
+
+**af_za**
+- Size of downloaded dataset files: 1.47 GB
+- Size of the generated dataset: 1 MB
+- Total amount of disk used: 1.47 GB
+
+An example of a data instance of the config `af_za` looks as follows:
+
+```
+{'id': 91,
+ 'num_samples': 385920,
+ 'path': '/home/patrick/.cache/huggingface/datasets/downloads/extracted/310a663d52322700b3d3473cbc5af429bd92a23f9bc683594e70bc31232db39e/home/vaxelrod/FLEURS/oss2_obfuscated/af_za/audio/train/17797742076841560615.wav',
+ 'audio': {'path': '/home/patrick/.cache/huggingface/datasets/downloads/extracted/310a663d52322700b3d3473cbc5af429bd92a23f9bc683594e70bc31232db39e/home/vaxelrod/FLEURS/oss2_obfuscated/af_za/audio/train/17797742076841560615.wav',
+  'array': array([ 0.0000000e+00,  0.0000000e+00,  0.0000000e+00, ...,
+         -1.1205673e-04, -8.4638596e-05, -1.2731552e-04], dtype=float32),
+  'sampling_rate': 16000},
+ 'raw_transcription': 'Dit is nog nie huidiglik bekend watter aantygings gemaak sal word of wat owerhede na die seun gelei het nie maar jeugmisdaad-verrigtinge het in die federale hof begin',
+ 'transcription': 'dit is nog nie huidiglik bekend watter aantygings gemaak sal word of wat owerhede na die seun gelei het nie maar jeugmisdaad-verrigtinge het in die federale hof begin',
+ 'gender': 0,
+ 'lang_id': 0,
+ 'language': 'Afrikaans',
+ 'lang_group_id': 3}
+```
+
+### Data Fields
+
+The data fields are the same among all splits.
+- **id** (int): ID of audio sample
+- **num_samples** (int): Number of float values
+- **path** (str): Path to the audio file
+- **audio** (dict): Audio object including loaded audio array, sampling rate and path ot audio
+- **raw_transcription** (str): The non-normalized transcription of the audio file
+- **transcription** (str): Transcription of the audio file
+- **gender** (int): Class id of gender
+- **lang_id** (int): Class id of language
+- **lang_group_id** (int): Class id of language group
+
+### Data Splits
+
+Every config only has the `"train"` split containing of *ca.* 1000 examples, and a `"validation"` and `"test"` split each containing of *ca.* 400 examples.
+
+## Dataset Creation
+
+We collect between one and three recordings for each sentence (2.3 on average), and buildnew train-dev-test splits with 1509, 150 and 350 sentences for
+train, dev and test respectively.
+
+## Considerations for Using the Data
+
+### Social Impact of Dataset
+
+This dataset is meant to encourage the development of speech technology in a lot more languages of the world. One of the goal is to give equal access to technologies like speech recognition or speech translation to everyone, meaning better dubbing or better access to content from the internet (like podcasts, streaming or videos).
+
+### Discussion of Biases
+
+Most datasets have a fair distribution of gender utterances (e.g. the newly introduced FLEURS dataset). While many languages are covered from various regions of the world, the benchmark misses many languages that are all equally important. We believe technology built through FLEURS should generalize to all languages.
+
+### Other Known Limitations
+
+The dataset has a particular focus on read-speech because common evaluation benchmarks like CoVoST-2 or LibriSpeech evaluate on this type of speech. There is sometimes a known mismatch between performance obtained in a read-speech setting and a more noisy setting (in production for instance). Given the big progress that remains to be made on many languages, we believe better performance on FLEURS should still correlate well with actual progress made for speech understanding.
+
+## Additional Information
+
+All datasets are licensed under the [Creative Commons license (CC-BY)](https://creativecommons.org/licenses/).
+
+### Citation Information
+
+You can access the FLEURS paper at https://arxiv.org/abs/2205.12446.
+Please cite the paper when referencing the FLEURS corpus as:
+
+```
+@article{fleurs2022arxiv,
+  title = {FLEURS: Few-shot Learning Evaluation of Universal Representations of Speech},
+  author = {Conneau, Alexis and Ma, Min and Khanuja, Simran and Zhang, Yu and Axelrod, Vera and Dalmia, Siddharth and Riesa, Jason and Rivera, Clara and Bapna, Ankur},
+  journal={arXiv preprint arXiv:2205.12446},
+  url = {https://arxiv.org/abs/2205.12446},
+  year = {2022},
+```
+
+### Contributions
+
+Thanks to [@patrickvonplaten](https://github.com/patrickvonplaten) and [@aconneau](https://github.com/aconneau) for adding this dataset.
