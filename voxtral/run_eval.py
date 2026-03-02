@@ -3,7 +3,8 @@ import os
 import torch
 from transformers import VoxtralForConditionalGeneration, AutoProcessor
 import evaluate
-from datasets import load_dataset, load_from_disk, Audio
+import pandas as pd
+from datasets import load_dataset, load_from_disk, Audio, Dataset
 from normalizer import data_utils
 import time
 from tqdm import tqdm
@@ -37,8 +38,10 @@ def main(args):
         pred_text = []
         for audio in audios:
             inputs = processor.apply_transcription_request(
-                language="fr",  # English for benchmark consistency
-                audio=audio,
+                language="fr",
+                audio=[audio],
+                sampling_rate=16000,
+                format=["wav"],
                 model_id=args.model_id,
             )
             inputs = inputs.to(model.device, dtype=torch.bfloat16)
@@ -58,19 +61,38 @@ def main(args):
         # normalize by minibatch size since we want the per-sample time
         batch["transcription_time_s"] = minibatch_size * [runtime / minibatch_size]
 
-        # normalize transcriptions with English normalizer
-        batch["predictions"] = [data_utils.normalizer(pred) for pred in pred_text]
+        # normalize transcriptions with multilingual normalizer (French)
+        batch["predictions"] = [data_utils.ml_normalizer(pred) for pred in pred_text]
         batch["references"] = batch["norm_text"]
         return batch
 
 
-#    dataset = data_utils.load_data(args)
-    ds = load_dataset(args.dataset_path, "fr_fr", split="test", trust_remote_code=True)
+    cv_tsv = os.path.join(args.dataset_path, f"{args.split}.tsv")
+    if os.path.exists(cv_tsv):
+        # Format brut Mozilla Common Voice (TSV + clips/)
+        clips_dir = os.path.join(args.dataset_path, "clips")
+        df = pd.read_csv(cv_tsv, sep="\t", usecols=["path", "sentence"])
+        df["audio"] = clips_dir + os.sep + df["path"]
+        df = df.drop(columns=["path"])
+        ds = Dataset.from_pandas(df, preserve_index=False)
+    else:
+        ds = load_dataset(args.dataset_path, args.dataset_config, split=args.split, trust_remote_code=True)
     print(ds)
 
     dataset = ds.cast_column("audio", Audio(sampling_rate=16000))
 
-    dataset = data_utils.prepare_data(dataset)
+    def normalize_fr(batch):
+        batch["original_text"] = data_utils.get_text(batch)
+        batch["norm_text"] = data_utils.ml_normalizer(batch["original_text"])
+        return batch
+
+    dataset = dataset.map(normalize_fr, writer_batch_size=1)
+    dataset = dataset.filter(data_utils.is_target_text_in_range, input_columns=["norm_text"], writer_batch_size=1)
+
+    if args.max_eval_samples is not None and args.max_eval_samples > 0:
+        print(f"Subsampling dataset to first {args.max_eval_samples} samples!")
+        dataset = dataset.select(range(min(args.max_eval_samples, len(dataset))))
+
     print(dataset)
 
     dataset = dataset.map(
@@ -128,8 +150,13 @@ if __name__ == "__main__":
         "--dataset",
         type=str,
         required=True,
-        help="Dataset name. *E.g.* `'librispeech_asr` for the LibriSpeech ASR dataset, or `'common_voice'` for Common Voice. The full list of dataset names "
-        "can be found at `https://huggingface.co/datasets/esb/datasets`",
+        help="Dataset name. *E.g.* `'fleurs'` for Google Fleurs, or `'common_voice'` for Common Voice.",
+    )
+    parser.add_argument(
+        "--dataset_config",
+        type=str,
+        default="fr_fr",
+        help="Dataset configuration name. *E.g.* `'fr_fr'` for Fleurs French, or `'fr'` for Common Voice French.",
     )
     parser.add_argument(
         "--split",

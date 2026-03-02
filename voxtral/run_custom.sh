@@ -35,10 +35,22 @@ for (( i=0; i<${num_models}; i++ ));
 do
     MODEL_ID=${MODEL_IDs[$i]}
 
+    # --- Google FLEURS (fr_fr) ---
     python run_eval.py \
         --model_id=${MODEL_ID} \
         --dataset_path="/scratch/jmartel/datasets/fleurs" \
         --dataset="fleurs" \
+        --dataset_config="fr_fr" \
+        --split="test" \
+        --batch_size=${BATCH_SIZE} \
+        --max_eval_samples=-1
+
+    # --- Mozilla Common Voice 24.0 (fr) ---
+    python run_eval.py \
+        --model_id=${MODEL_ID} \
+        --dataset_path="/scratch/jmartel/datasets/cv-corpus-24.0-2025-12-05/fr" \
+        --dataset="common_voice" \
+        --dataset_config="fr" \
         --split="test" \
         --batch_size=${BATCH_SIZE} \
         --max_eval_samples=-1
