@@ -6,7 +6,7 @@
 #SBATCH --mail-user=martel.jonathan@uqam.ca
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --gpus-per-node=a100:2
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=2
 #SBATCH --mem=96G
 #SBATCH --time=2:00:00
 
@@ -43,7 +43,7 @@ do
         --dataset_config="fr_fr" \
         --split="test" \
         --batch_size=${BATCH_SIZE} \
-        --max_eval_samples=-1
+        --max_eval_samples=20
 
     # --- Mozilla Common Voice 24.0 (fr) ---
     python /scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py \
@@ -53,7 +53,7 @@ do
         --dataset_config="fr" \
         --split="test" \
         --batch_size=${BATCH_SIZE} \
-        --max_eval_samples=200
+        --max_eval_samples=20
 
     # --- Mozilla Common Voice 24.0 - Français du Canada (validated) ---
     python /scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py \
@@ -64,7 +64,7 @@ do
         --accent_filter="Français du Canada" \
         --split="validated" \
         --batch_size=${BATCH_SIZE} \
-        --max_eval_samples=200
+        --max_eval_samples=20
 
     # --- Common Voice Spontaneous 2.0 (fr) ---
     python /scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py \
@@ -75,7 +75,7 @@ do
         --audio_dir="audios" \
         --split="full" \
         --batch_size=${BATCH_SIZE} \
-        --max_eval_samples=200
+        --max_eval_samples=20
         
 
     # Evaluate results
