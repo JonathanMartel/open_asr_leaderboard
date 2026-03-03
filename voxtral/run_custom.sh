@@ -42,6 +42,6 @@ do
     python /scratch/jmartel/open_asr_leaderboard/voxtral/run_multi.py \
         --model_id="${MODEL_ID}" \
         --batch_size=${BATCH_SIZE} \
-        --max_eval_samples=-1
+        --max_eval_samples=200
 
 done

@@ -1,0 +1,24 @@
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16
+
+================================================================================
+Dataset : fleurs | split : test
+================================================================================
+Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id'],
+    num_rows: 676
+})
+Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id', 'original_text', 'norm_text'],
+    num_rows: 676
+})
+Results saved at path: /scratch/jmartel/open_asr_leaderboard/voxtral/results/MODEL_-scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16_DATASET_-scratch-jmartel-datasets-fleurs_fleurs_test.jsonl
+WER: 4.05 % RTFx: 0.51
+
+================================================================================
+Dataset : common_voice | split : test
+================================================================================
+Dataset({
+    features: ['audio', 'sentence'],
+    num_rows: 16196
+})
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-2507
