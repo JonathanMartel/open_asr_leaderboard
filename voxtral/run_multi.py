@@ -16,19 +16,38 @@ Usage:
 import argparse
 import os
 import sys
+import time
+
+_MULTI_START = time.time()
+
+def _mlog(msg):
+    elapsed = time.time() - _MULTI_START
+    h = int(elapsed // 3600)
+    m = int((elapsed % 3600) // 60)
+    s = int(elapsed % 60)
+    print(f"[{h:02d}:{m:02d}:{s:02d}] {msg}", flush=True)
+
+_mlog("=== run_multi.py démarré")
+_mlog(f"  Python : {sys.version.split()[0]}")
+_mlog(f"  PID : {os.getpid()}")
 
 # Garantir le mode offline même sans le shell script SLURM
 os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
 os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 os.environ.setdefault("HF_HUB_OFFLINE", "1")
 
+_mlog("  Imports principaux (torch, transformers, datasets)...")
+_t = time.time()
 # Import depuis run_eval.py dans le même dossier
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from run_eval import load_model_and_processor, load_raw_dataset, evaluate_dataset
+from run_eval import load_model_and_processor, load_raw_dataset, evaluate_dataset, _log, _log_step
+_mlog(f"  └─ run_eval importé : {time.time() - _t:.1f}s")
 
 # Chemin vers eval_utils pour le score final
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "normalizer"))
+_t = time.time()
 import eval_utils
+_mlog(f"  └─ eval_utils importé : {time.time() - _t:.1f}s")
 
 
 # Configuration des datasets à évaluer
@@ -102,14 +121,19 @@ def main():
 
     results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 
+    _mlog(f"=== Modèle : {args.model_id}")
+    _mlog(f"  max_eval_samples={args.max_eval_samples} | batch_size={args.batch_size} | max_new_tokens={args.max_new_tokens}")
+
     # Chargement unique du modèle
+    t_model = time.time()
     model, processor, infer_device = load_model_and_processor(args.model_id, args.device)
+    _mlog(f"  Modèle prêt en {time.time() - t_model:.1f}s")
 
     # Évaluation séquentielle de chaque dataset
-    for cfg in DATASETS:
-        print(f"\n{'='*80}")
-        print(f"Dataset : {cfg['dataset_name']} | split : {cfg['split']}")
-        print(f"{'='*80}")
+    for i, cfg in enumerate(DATASETS):
+        _mlog(f"\n{'='*80}")
+        _mlog(f"Dataset {i+1}/{len(DATASETS)} : {cfg['dataset_name']} | split={cfg['split']}")
+        _mlog(f"{'='*80}")
 
         dataset = load_raw_dataset(
             dataset_path=cfg["dataset_path"],
@@ -135,10 +159,11 @@ def main():
         )
 
     # Score composite final
-    print(f"\n{'='*80}")
-    print("Résultats finaux")
-    print(f"{'='*80}")
+    _mlog(f"\n{'='*80}")
+    _mlog("=== Score composite final")
+    _mlog(f"{'='*80}")
     eval_utils.score_results(results_dir, args.model_id)
+    _mlog(f"=== run_multi.py terminé — durée totale : {time.time() - _MULTI_START:.1f}s")
 
 
 if __name__ == "__main__":
