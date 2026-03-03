@@ -1,0 +1,76 @@
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16
+Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id'],
+    num_rows: 676
+})
+Subsampling dataset to first 20 samples!
+Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id', 'original_text', 'norm_text'],
+    num_rows: 20
+})
+Results saved at path: /scratch/jmartel/open_asr_leaderboard/voxtral/results/MODEL_-scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16_DATASET_-scratch-jmartel-datasets-fleurs_fleurs_test.jsonl
+WER: 7.05 % RTFx: 0.52
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16
+Dataset({
+    features: ['audio', 'sentence'],
+    num_rows: 16196
+})
+Subsampling dataset to first 20 samples!
+Dataset({
+    features: ['audio', 'sentence', 'original_text', 'norm_text'],
+    num_rows: 20
+})
+Results saved at path: /scratch/jmartel/open_asr_leaderboard/voxtral/results/MODEL_-scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16_DATASET_-scratch-jmartel-datasets-cv-corpus-24.0-2025-12-05-fr_common_voice_test.jsonl
+WER: 17.51 % RTFx: 0.74
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16
+Filtrage accent 'Français du Canada' : 775562 → 11604 entrées
+Dataset({
+    features: ['audio', 'sentence'],
+    num_rows: 11604
+})
+Subsampling dataset to first 20 samples!
+Dataset({
+    features: ['audio', 'sentence', 'original_text', 'norm_text'],
+    num_rows: 20
+})
+Results saved at path: /scratch/jmartel/open_asr_leaderboard/voxtral/results/MODEL_-scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16_DATASET_-scratch-jmartel-datasets-cv-corpus-24.0-2025-12-05-fr_common_voice_fr_ca_validated.jsonl
+WER: 10.05 % RTFx: 0.8
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16
+Dataset({
+    features: ['audio', 'transcription'],
+    num_rows: 346
+})
+Subsampling dataset to first 20 samples!
+Dataset({
+    features: ['audio', 'transcription', 'original_text', 'norm_text'],
+    num_rows: 20
+})
+Results saved at path: /scratch/jmartel/open_asr_leaderboard/voxtral/results/MODEL_-scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16_DATASET_-scratch-jmartel-datasets-sps-corpus-2.0-2025-12-05-fr_spontaneous_full.jsonl
+WER: 7.76 % RTFx: 0.64
+Filtering models by id: /scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16
+********************************************************************************
+Results per dataset:
+********************************************************************************
+/scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16 | -scratch-jmartel-datasets-cv-corpus-24.0-2025-12-05-fr_common_voice_fr_ca_validated: WER = 10.05 %, RTFx = 0.80
+/scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16 | -scratch-jmartel-datasets-cv-corpus-24.0-2025-12-05-fr_common_voice_test: WER = 17.51 %, RTFx = 0.74
+/scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16 | -scratch-jmartel-datasets-fleurs_fleurs_test: WER = 7.05 %, RTFx = 0.52
+/scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16 | -scratch-jmartel-datasets-sps-corpus-2.0-2025-12-05-fr_spontaneous_fu: WER = 7.76 %, RTFx = 0.64
+
+********************************************************************************
+Composite Results:
+********************************************************************************
+/scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16: WER = 10.59 %
+/scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16: RTFx = 0.63
+********************************************************************************
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-2507
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-2507
+Dataset({
+    features: ['audio', 'sentence'],
+    num_rows: 16196
+})
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-2507
+Filtrage accent 'Français du Canada' : 775562 → 11604 entrées
+Dataset({
+    features: ['audio', 'sentence'],
+    num_rows: 11604
+})

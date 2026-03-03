@@ -1,0 +1,28 @@
+Traceback (most recent call last):
+  File "/scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py", line 8, in <module>
+    from normalizer import data_utils
+ModuleNotFoundError: No module named 'normalizer'
+Traceback (most recent call last):
+  File "/scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py", line 8, in <module>
+    from normalizer import data_utils
+ModuleNotFoundError: No module named 'normalizer'
+Traceback (most recent call last):
+  File "/scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py", line 8, in <module>
+    from normalizer import data_utils
+ModuleNotFoundError: No module named 'normalizer'
+python: can't open file '/scratch/jmartel/open_asr_leaderboard/run_eval.py': [Errno 2] No such file or directory
+/localscratch/spool/slurmd/job57242995/slurm_script: line 83: cd: ../normalizer: No such file or directory
+Traceback (most recent call last):
+  File "/scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py", line 8, in <module>
+    from normalizer import data_utils
+ModuleNotFoundError: No module named 'normalizer'
+Traceback (most recent call last):
+  File "/scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py", line 8, in <module>
+    from normalizer import data_utils
+ModuleNotFoundError: No module named 'normalizer'
+Traceback (most recent call last):
+  File "/scratch/jmartel/open_asr_leaderboard/voxtral/run_eval.py", line 8, in <module>
+    from normalizer import data_utils
+ModuleNotFoundError: No module named 'normalizer'
+python: can't open file '/scratch/jmartel/open_asr_leaderboard/run_eval.py': [Errno 2] No such file or directory
+/localscratch/spool/slurmd/job57242995/slurm_script: line 83: cd: ../normalizer: No such file or directory

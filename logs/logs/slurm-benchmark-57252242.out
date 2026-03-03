@@ -1,0 +1,9 @@
+Loading model: /scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16
+Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id'],
+    num_rows: 676
+})
+Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id', 'original_text', 'norm_text'],
+    num_rows: 676
+})
