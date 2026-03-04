@@ -1,0 +1,331 @@
+[00:00:00] === run_multi.py démarré
+[00:00:02]   Python : 3.13.2
+[00:00:02]   PID : 686091
+[00:00:02]   Imports principaux (torch, transformers, datasets)...
+[00:00:00] Chargement de la métrique WER...
+[00:00:24]   └─ evaluate.load(wer) : 24.3s
+[00:39:25]   └─ run_eval importé : 2363.3s
+[00:39:25]   └─ eval_utils importé : 0.0s
+[00:39:25] === Modèle : /scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16
+[00:39:25]   max_eval_samples=200 | batch_size=8 | max_new_tokens=500
+[00:00:24] === Chargement du modèle : /scratch/jmartel/models/Voxtral-Small-24B-GPTQ-W4A16
+[00:00:24]   Chargement du processor...
+[00:01:28]   └─ AutoProcessor.from_pretrained : 64.5s
+[00:01:28]   Chargement des poids du modèle (device_map='auto')...
+[01:22:15]   └─ VoxtralForConditionalGeneration.from_pretrained : 4846.4s
+[01:22:15]   └─ model.eval() : 0.0s
+[01:22:15]   Device d'inférence : cuda:0
+[01:22:15]   GPU 0 (NVIDIA A100-SXM4-40GB) : alloué=3.7Go / réservé=3.7Go / total=42.4Go
+[01:22:15]   GPU 1 (NVIDIA A100-SXM4-40GB) : alloué=5.1Go / réservé=5.1Go / total=42.4Go
+[01:22:15]   GPU 2 (NVIDIA A100-SXM4-40GB) : alloué=5.1Go / réservé=5.1Go / total=42.4Go
+[01:22:15]   GPU 3 (NVIDIA A100-SXM4-40GB) : alloué=4.7Go / réservé=4.8Go / total=42.4Go
+[01:22:15]   └─ Chargement modèle total : 4911.2s
+[02:01:17]   Modèle prêt en 4911.2s
+[02:01:17] 
+================================================================================
+[02:01:17] Dataset 1/4 : fleurs | split=test
+[02:01:17] ================================================================================
+[01:22:15] --- Chargement dataset : /scratch/jmartel/datasets/fleurs | split=test
+[01:22:15]   Format HuggingFace détecté : /scratch/jmartel/datasets/fleurs (config=fr_fr)
+[01:22:33]   └─ load_dataset (676 samples) : 18.1s
+[01:22:33]   Sous-échantillonnage : 676 → 200 échantillons
+[01:22:34]   └─ ds.select : 0.8s
+[01:22:34]   Dataset brut : Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id'],
+    num_rows: 200
+})
+[01:22:34]   cast_column → Audio(16kHz)...
+[01:22:34]   └─ cast_column (lazy) : 0.0s
+[01:22:34]   map(normalize_fr) sur 200 samples...
+[01:22:36]   └─ map(normalize_fr) — 200 samples traités : 1.7s
+[01:22:36]   filter(is_target_text_in_range)...
+[01:22:36]   └─ filter : 200 → 200 samples : 0.0s
+[01:22:36]   └─ load_raw_dataset total : 20.7s
+[01:22:36]   Dataset final : Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id', 'original_text', 'norm_text'],
+    num_rows: 200
+})
+[01:22:36] --- Inférence : fleurs | 200 samples | batch_size=8
+[01:22:36]   Lancement de dataset.map(benchmark)...
+[01:30:03]   Sample 0000 | audio=10.2s | prep=0.82s | to_gpu=0.002s | generate=35.67s | RTFx=0.3
+[01:30:46]   Sample 0001 | audio=23.4s | prep=0.03s | to_gpu=0.000s | generate=43.43s | RTFx=0.5
+[01:31:04]   Sample 0002 | audio=8.3s | prep=0.02s | to_gpu=0.000s | generate=17.86s | RTFx=0.5
+[01:31:25]   Sample 0003 | audio=10.2s | prep=0.01s | to_gpu=0.000s | generate=20.64s | RTFx=0.5
+[01:31:43]   Sample 0004 | audio=8.3s | prep=0.02s | to_gpu=0.000s | generate=18.42s | RTFx=0.5
+[01:31:57]   Sample 0005 | audio=7.2s | prep=0.01s | to_gpu=0.000s | generate=13.97s | RTFx=0.5
+[01:32:16]   Sample 0006 | audio=8.4s | prep=0.01s | to_gpu=0.000s | generate=18.97s | RTFx=0.4
+[01:32:37]   Sample 0007 | audio=11.6s | prep=0.02s | to_gpu=0.000s | generate=21.19s | RTFx=0.5
+[01:32:56]   Sample 0008 | audio=7.7s | prep=0.02s | to_gpu=0.000s | generate=18.41s | RTFx=0.4
+[01:33:28]   Sample 0009 | audio=14.8s | prep=0.02s | to_gpu=0.000s | generate=32.30s | RTFx=0.5
+[01:33:52]   Sample 0010 | audio=8.1s | prep=0.02s | to_gpu=0.000s | generate=23.97s | RTFx=0.3
+[01:34:18]   Sample 0011 | audio=14.4s | prep=0.02s | to_gpu=0.000s | generate=26.19s | RTFx=0.5
+[01:34:33]   Sample 0012 | audio=10.2s | prep=0.01s | to_gpu=0.000s | generate=15.08s | RTFx=0.7
+[01:35:01]   Sample 0013 | audio=11.6s | prep=0.02s | to_gpu=0.000s | generate=27.30s | RTFx=0.4
+[01:35:16]   Sample 0014 | audio=10.7s | prep=0.01s | to_gpu=0.000s | generate=15.08s | RTFx=0.7
+[01:35:36]   Sample 0015 | audio=13.7s | prep=0.01s | to_gpu=0.000s | generate=20.09s | RTFx=0.7
+[01:36:34]   Sample 0016 | audio=27.6s | prep=0.01s | to_gpu=0.000s | generate=57.85s | RTFx=0.5
+[01:36:51]   Sample 0017 | audio=7.8s | prep=0.01s | to_gpu=0.000s | generate=16.75s | RTFx=0.5
+[01:37:11]   Sample 0018 | audio=14.3s | prep=0.01s | to_gpu=0.000s | generate=20.63s | RTFx=0.7
+[01:37:26]   Sample 0019 | audio=10.1s | prep=0.01s | to_gpu=0.000s | generate=15.08s | RTFx=0.7
+[01:37:45]   Sample 0020 | audio=8.3s | prep=0.01s | to_gpu=0.000s | generate=18.41s | RTFx=0.4
+[01:37:58]   Sample 0021 | audio=5.0s | prep=0.01s | to_gpu=0.000s | generate=13.41s | RTFx=0.4
+[01:38:17]   Sample 0022 | audio=11.2s | prep=0.01s | to_gpu=0.000s | generate=18.41s | RTFx=0.6
+[01:38:45]   Sample 0023 | audio=14.3s | prep=0.01s | to_gpu=0.000s | generate=27.87s | RTFx=0.5
+[01:38:56]   Sample 0024 | audio=7.2s | prep=0.01s | to_gpu=0.000s | generate=11.75s | RTFx=0.6
+[01:39:15]   Sample 0025 | audio=12.4s | prep=0.01s | to_gpu=0.000s | generate=18.97s | RTFx=0.7
+[01:39:35]   Sample 0026 | audio=12.2s | prep=0.02s | to_gpu=0.000s | generate=20.08s | RTFx=0.6
+[01:39:58]   Sample 0027 | audio=10.1s | prep=0.02s | to_gpu=0.000s | generate=22.86s | RTFx=0.4
+[01:40:16]   Sample 0028 | audio=8.2s | prep=0.01s | to_gpu=0.000s | generate=17.30s | RTFx=0.5
+[01:40:29]   Sample 0029 | audio=6.7s | prep=0.02s | to_gpu=0.000s | generate=13.41s | RTFx=0.5
+[01:40:53]   Sample 0030 | audio=11.5s | prep=0.01s | to_gpu=0.000s | generate=23.98s | RTFx=0.5
+[01:41:08]   Sample 0031 | audio=5.9s | prep=0.02s | to_gpu=0.000s | generate=14.52s | RTFx=0.4
+[01:41:33]   Sample 0032 | audio=14.3s | prep=0.01s | to_gpu=0.000s | generate=25.08s | RTFx=0.6
+[01:41:47]   Sample 0033 | audio=8.6s | prep=0.02s | to_gpu=0.000s | generate=13.98s | RTFx=0.6
+[01:42:15]   Sample 0034 | audio=15.4s | prep=0.01s | to_gpu=0.000s | generate=27.86s | RTFx=0.6
+[01:42:44]   Sample 0035 | audio=13.4s | prep=0.02s | to_gpu=0.000s | generate=29.53s | RTFx=0.5
+[01:42:58]   Sample 0036 | audio=10.7s | prep=0.02s | to_gpu=0.000s | generate=13.41s | RTFx=0.8
+[01:43:23]   Sample 0037 | audio=13.8s | prep=0.01s | to_gpu=0.000s | generate=25.64s | RTFx=0.5
+[01:43:41]   Sample 0038 | audio=10.7s | prep=0.02s | to_gpu=0.000s | generate=17.86s | RTFx=0.6
+[01:43:57]   Sample 0039 | audio=8.9s | prep=0.01s | to_gpu=0.000s | generate=15.64s | RTFx=0.6
+[01:44:16]   Sample 0040 | audio=10.4s | prep=0.02s | to_gpu=0.000s | generate=19.52s | RTFx=0.5
+[01:44:40]   Sample 0041 | audio=9.8s | prep=0.01s | to_gpu=0.000s | generate=23.97s | RTFx=0.4
+[01:44:48]   Sample 0042 | audio=8.3s | prep=0.02s | to_gpu=0.000s | generate=7.86s | RTFx=1.1
+[01:45:20]   Sample 0043 | audio=17.7s | prep=0.01s | to_gpu=0.000s | generate=31.74s | RTFx=0.6
+[01:45:27]   Sample 0044 | audio=3.8s | prep=0.01s | to_gpu=0.000s | generate=7.30s | RTFx=0.5
+[01:45:37]   Sample 0045 | audio=4.2s | prep=0.01s | to_gpu=0.000s | generate=10.08s | RTFx=0.4
+[01:45:51]   Sample 0046 | audio=9.1s | prep=0.01s | to_gpu=0.000s | generate=13.41s | RTFx=0.7
+[01:46:05]   Sample 0047 | audio=8.2s | prep=0.02s | to_gpu=0.000s | generate=14.52s | RTFx=0.6
+[01:46:19]   Sample 0048 | audio=8.0s | prep=0.01s | to_gpu=0.000s | generate=13.41s | RTFx=0.6
+[01:46:31]   Sample 0049 | audio=4.4s | prep=0.01s | to_gpu=0.000s | generate=11.74s | RTFx=0.4
+[01:46:46]   Sample 0050 | audio=11.0s | prep=0.01s | to_gpu=0.000s | generate=15.08s | RTFx=0.7
+[01:47:12]   Sample 0051 | audio=18.4s | prep=0.01s | to_gpu=0.000s | generate=26.19s | RTFx=0.7
+[01:47:34]   Sample 0052 | audio=14.6s | prep=0.01s | to_gpu=0.000s | generate=22.30s | RTFx=0.7
+[01:47:56]   Sample 0053 | audio=11.6s | prep=0.02s | to_gpu=0.000s | generate=21.75s | RTFx=0.5
+[01:48:25]   Sample 0054 | audio=12.2s | prep=0.02s | to_gpu=0.000s | generate=28.41s | RTFx=0.4
+[01:48:45]   Sample 0055 | audio=14.6s | prep=0.02s | to_gpu=0.000s | generate=20.08s | RTFx=0.7
+[01:48:58]   Sample 0056 | audio=5.9s | prep=0.01s | to_gpu=0.000s | generate=12.87s | RTFx=0.5
+[01:49:16]   Sample 0057 | audio=11.5s | prep=0.01s | to_gpu=0.000s | generate=17.86s | RTFx=0.6
+[01:49:33]   Sample 0058 | audio=7.3s | prep=0.02s | to_gpu=0.000s | generate=17.30s | RTFx=0.4
+[01:50:05]   Sample 0059 | audio=11.9s | prep=0.01s | to_gpu=0.000s | generate=31.75s | RTFx=0.4
+[01:50:22]   Sample 0060 | audio=10.9s | prep=0.02s | to_gpu=0.000s | generate=17.30s | RTFx=0.6
+[01:50:39]   Sample 0061 | audio=7.2s | prep=0.01s | to_gpu=0.000s | generate=16.75s | RTFx=0.4
+[01:51:04]   Sample 0062 | audio=10.3s | prep=0.02s | to_gpu=0.000s | generate=24.53s | RTFx=0.4
+[01:51:16]   Sample 0063 | audio=9.1s | prep=0.02s | to_gpu=0.000s | generate=12.86s | RTFx=0.7
+[01:51:35]   Sample 0064 | audio=11.5s | prep=0.01s | to_gpu=0.000s | generate=18.41s | RTFx=0.6
+[01:51:53]   Sample 0065 | audio=8.1s | prep=0.01s | to_gpu=0.000s | generate=18.41s | RTFx=0.4
+[01:52:11]   Sample 0066 | audio=6.4s | prep=0.02s | to_gpu=0.000s | generate=17.31s | RTFx=0.4
+[01:52:36]   Sample 0067 | audio=11.3s | prep=0.01s | to_gpu=0.000s | generate=25.63s | RTFx=0.4
+[01:53:03]   Sample 0068 | audio=11.2s | prep=0.02s | to_gpu=0.000s | generate=26.75s | RTFx=0.4
+[01:53:32]   Sample 0069 | audio=13.8s | prep=0.02s | to_gpu=0.000s | generate=28.41s | RTFx=0.5
+[01:53:48]   Sample 0070 | audio=7.2s | prep=0.02s | to_gpu=0.000s | generate=16.75s | RTFx=0.4
+[01:54:12]   Sample 0071 | audio=16.1s | prep=0.01s | to_gpu=0.000s | generate=23.42s | RTFx=0.7
+[01:54:22]   Sample 0072 | audio=7.3s | prep=0.01s | to_gpu=0.000s | generate=10.64s | RTFx=0.7
+[01:54:50]   Sample 0073 | audio=11.0s | prep=0.01s | to_gpu=0.000s | generate=27.86s | RTFx=0.4
+[01:55:03]   Sample 0074 | audio=5.8s | prep=0.02s | to_gpu=0.000s | generate=12.87s | RTFx=0.5
+[01:55:27]   Sample 0075 | audio=11.9s | prep=0.01s | to_gpu=0.000s | generate=23.97s | RTFx=0.5
+[01:55:45]   Sample 0076 | audio=8.6s | prep=0.02s | to_gpu=0.000s | generate=17.86s | RTFx=0.5
+[01:56:14]   Sample 0077 | audio=13.2s | prep=0.01s | to_gpu=0.000s | generate=28.97s | RTFx=0.5
+[01:56:33]   Sample 0078 | audio=8.0s | prep=0.02s | to_gpu=0.000s | generate=18.97s | RTFx=0.4
+[01:57:02]   Sample 0079 | audio=10.1s | prep=0.02s | to_gpu=0.000s | generate=28.41s | RTFx=0.4
+[01:57:28]   Sample 0080 | audio=11.8s | prep=0.01s | to_gpu=0.000s | generate=26.20s | RTFx=0.4
+[01:57:52]   Sample 0081 | audio=14.9s | prep=0.02s | to_gpu=0.000s | generate=23.97s | RTFx=0.6
+[01:58:09]   Sample 0082 | audio=8.9s | prep=0.02s | to_gpu=0.000s | generate=16.75s | RTFx=0.5
+[01:58:40]   Sample 0083 | audio=13.0s | prep=0.01s | to_gpu=0.000s | generate=31.19s | RTFx=0.4
+[01:58:54]   Sample 0084 | audio=6.4s | prep=0.02s | to_gpu=0.000s | generate=13.41s | RTFx=0.5
+[01:59:08]   Sample 0085 | audio=5.9s | prep=0.01s | to_gpu=0.000s | generate=13.97s | RTFx=0.4
+[01:59:56]   Sample 0086 | audio=27.8s | prep=0.02s | to_gpu=0.000s | generate=47.86s | RTFx=0.6
+[02:00:23]   Sample 0087 | audio=12.8s | prep=0.02s | to_gpu=0.000s | generate=27.31s | RTFx=0.5
+[02:00:35]   Sample 0088 | audio=5.4s | prep=0.01s | to_gpu=0.000s | generate=11.75s | RTFx=0.5
+[02:00:58]   Sample 0089 | audio=8.6s | prep=0.01s | to_gpu=0.000s | generate=22.86s | RTFx=0.4
+[02:01:17]   Sample 0090 | audio=8.2s | prep=0.02s | to_gpu=0.000s | generate=18.42s | RTFx=0.4
+[02:01:44]   Sample 0091 | audio=14.9s | prep=0.01s | to_gpu=0.000s | generate=26.74s | RTFx=0.6
+[02:02:04]   Sample 0092 | audio=11.9s | prep=0.02s | to_gpu=0.000s | generate=19.50s | RTFx=0.6
+[02:02:28]   Sample 0093 | audio=11.9s | prep=0.02s | to_gpu=0.000s | generate=24.53s | RTFx=0.5
+[02:02:55]   Sample 0094 | audio=12.5s | prep=0.01s | to_gpu=0.000s | generate=26.19s | RTFx=0.5
+[02:03:13]   Sample 0095 | audio=12.4s | prep=0.02s | to_gpu=0.000s | generate=18.42s | RTFx=0.7
+[02:03:34]   Sample 0096 | audio=8.9s | prep=0.01s | to_gpu=0.000s | generate=20.08s | RTFx=0.4
+[02:03:50]   Sample 0097 | audio=12.7s | prep=0.02s | to_gpu=0.000s | generate=16.75s | RTFx=0.8
+[02:04:09]   Sample 0098 | audio=6.1s | prep=0.01s | to_gpu=0.000s | generate=17.86s | RTFx=0.3
+[02:04:26]   Sample 0099 | audio=9.5s | prep=0.02s | to_gpu=0.000s | generate=17.31s | RTFx=0.5
+[02:04:46]   Sample 0100 | audio=9.9s | prep=0.01s | to_gpu=0.000s | generate=19.52s | RTFx=0.5
+[02:05:04]   Sample 0101 | audio=11.9s | prep=0.02s | to_gpu=0.000s | generate=17.86s | RTFx=0.7
+[02:05:42]   Sample 0102 | audio=21.8s | prep=0.02s | to_gpu=0.000s | generate=38.42s | RTFx=0.6
+[02:06:03]   Sample 0103 | audio=9.5s | prep=0.02s | to_gpu=0.000s | generate=20.08s | RTFx=0.5
+[02:06:21]   Sample 0104 | audio=6.6s | prep=0.01s | to_gpu=0.000s | generate=17.87s | RTFx=0.4
+[02:06:45]   Sample 0105 | audio=10.7s | prep=0.02s | to_gpu=0.000s | generate=23.97s | RTFx=0.4
+[02:07:02]   Sample 0106 | audio=11.6s | prep=0.02s | to_gpu=0.000s | generate=17.30s | RTFx=0.7
+[02:07:22]   Sample 0107 | audio=8.5s | prep=0.01s | to_gpu=0.000s | generate=20.08s | RTFx=0.4
+[02:07:47]   Sample 0108 | audio=9.0s | prep=0.01s | to_gpu=0.000s | generate=24.52s | RTFx=0.4
+[02:08:04]   Sample 0109 | audio=7.8s | prep=0.02s | to_gpu=0.000s | generate=16.75s | RTFx=0.5
+[02:08:17]   Sample 0110 | audio=5.9s | prep=0.01s | to_gpu=0.000s | generate=12.86s | RTFx=0.5
+[02:08:34]   Sample 0111 | audio=10.6s | prep=0.02s | to_gpu=0.001s | generate=17.31s | RTFx=0.6
+[02:08:59]   Sample 0112 | audio=12.2s | prep=0.01s | to_gpu=0.000s | generate=23.97s | RTFx=0.5
+[02:09:28]   Sample 0113 | audio=11.1s | prep=0.02s | to_gpu=0.000s | generate=29.53s | RTFx=0.4
+[02:09:43]   Sample 0114 | audio=6.8s | prep=0.02s | to_gpu=0.000s | generate=15.08s | RTFx=0.4
+[02:10:02]   Sample 0115 | audio=11.2s | prep=0.01s | to_gpu=0.000s | generate=18.97s | RTFx=0.6
+[02:10:24]   Sample 0116 | audio=13.0s | prep=0.02s | to_gpu=0.000s | generate=21.20s | RTFx=0.6
+[02:10:50]   Sample 0117 | audio=13.8s | prep=0.01s | to_gpu=0.000s | generate=26.19s | RTFx=0.5
+[02:11:07]   Sample 0118 | audio=7.1s | prep=0.02s | to_gpu=0.000s | generate=16.75s | RTFx=0.4
+[02:11:38]   Sample 0119 | audio=12.7s | prep=0.01s | to_gpu=0.000s | generate=30.64s | RTFx=0.4
+[02:11:56]   Sample 0120 | audio=7.8s | prep=0.01s | to_gpu=0.000s | generate=17.86s | RTFx=0.4
+[02:12:08]   Sample 0121 | audio=8.6s | prep=0.02s | to_gpu=0.000s | generate=12.30s | RTFx=0.7
+[02:12:35]   Sample 0122 | audio=13.8s | prep=0.01s | to_gpu=0.000s | generate=26.20s | RTFx=0.5
+[02:12:47]   Sample 0123 | audio=4.3s | prep=0.01s | to_gpu=0.001s | generate=12.30s | RTFx=0.4
+[02:13:07]   Sample 0124 | audio=8.9s | prep=0.01s | to_gpu=0.000s | generate=20.08s | RTFx=0.4
+[02:13:18]   Sample 0125 | audio=8.5s | prep=0.01s | to_gpu=0.000s | generate=10.64s | RTFx=0.8
+[02:13:42]   Sample 0126 | audio=11.0s | prep=0.01s | to_gpu=0.000s | generate=23.97s | RTFx=0.5
+[02:14:01]   Sample 0127 | audio=10.9s | prep=0.01s | to_gpu=0.000s | generate=18.97s | RTFx=0.6
+[02:14:18]   Sample 0128 | audio=6.6s | prep=0.01s | to_gpu=0.000s | generate=17.30s | RTFx=0.4
+[02:14:40]   Sample 0129 | audio=8.8s | prep=0.01s | to_gpu=0.000s | generate=21.20s | RTFx=0.4
+[02:15:10]   Sample 0130 | audio=15.4s | prep=0.02s | to_gpu=0.000s | generate=29.96s | RTFx=0.5
+[02:15:23]   Sample 0131 | audio=9.5s | prep=0.02s | to_gpu=0.000s | generate=12.86s | RTFx=0.7
+[02:15:40]   Sample 0132 | audio=13.7s | prep=0.01s | to_gpu=0.000s | generate=17.31s | RTFx=0.8
+[02:16:07]   Sample 0133 | audio=15.9s | prep=0.02s | to_gpu=0.000s | generate=26.74s | RTFx=0.6
+[02:16:28]   Sample 0134 | audio=11.8s | prep=0.01s | to_gpu=0.000s | generate=20.08s | RTFx=0.6
+[02:16:56]   Sample 0135 | audio=14.8s | prep=0.02s | to_gpu=0.000s | generate=28.41s | RTFx=0.5
+[02:17:11]   Sample 0136 | audio=7.3s | prep=0.01s | to_gpu=0.000s | generate=14.52s | RTFx=0.5
+[02:17:41]   Sample 0137 | audio=19.0s | prep=0.01s | to_gpu=0.000s | generate=30.09s | RTFx=0.6
+[02:18:02]   Sample 0138 | audio=9.5s | prep=0.02s | to_gpu=0.000s | generate=20.63s | RTFx=0.5
+[02:18:20]   Sample 0139 | audio=10.8s | prep=0.01s | to_gpu=0.000s | generate=17.86s | RTFx=0.6
+[02:18:34]   Sample 0140 | audio=6.3s | prep=0.01s | to_gpu=0.000s | generate=14.12s | RTFx=0.4
+[02:19:01]   Sample 0141 | audio=15.4s | prep=0.01s | to_gpu=0.000s | generate=27.30s | RTFx=0.6
+[02:19:23]   Sample 0142 | audio=11.4s | prep=0.01s | to_gpu=0.000s | generate=21.19s | RTFx=0.5
+[02:19:46]   Sample 0143 | audio=11.5s | prep=0.01s | to_gpu=0.000s | generate=23.41s | RTFx=0.5
+[02:20:17]   Sample 0144 | audio=12.9s | prep=0.01s | to_gpu=0.000s | generate=31.19s | RTFx=0.4
+[02:20:40]   Sample 0145 | audio=15.1s | prep=0.01s | to_gpu=0.000s | generate=22.87s | RTFx=0.7
+[02:21:06]   Sample 0146 | audio=14.9s | prep=0.01s | to_gpu=0.000s | generate=25.08s | RTFx=0.6
+[02:21:17]   Sample 0147 | audio=10.0s | prep=0.01s | to_gpu=0.000s | generate=10.63s | RTFx=0.9
+[02:21:42]   Sample 0148 | audio=8.4s | prep=0.01s | to_gpu=0.000s | generate=25.09s | RTFx=0.3
+[02:22:10]   Sample 0149 | audio=11.5s | prep=0.02s | to_gpu=0.000s | generate=26.74s | RTFx=0.4
+[02:22:23]   Sample 0150 | audio=4.7s | prep=0.02s | to_gpu=0.001s | generate=12.33s | RTFx=0.4
+[02:22:39]   Sample 0151 | audio=11.4s | prep=0.01s | to_gpu=0.000s | generate=15.64s | RTFx=0.7
+[02:22:49]   Sample 0152 | audio=5.2s | prep=0.01s | to_gpu=0.000s | generate=10.64s | RTFx=0.5
+[02:23:07]   Sample 0153 | audio=12.6s | prep=0.01s | to_gpu=0.000s | generate=17.30s | RTFx=0.7
+[02:23:23]   Sample 0154 | audio=8.3s | prep=0.01s | to_gpu=0.000s | generate=15.64s | RTFx=0.5
+[02:23:51]   Sample 0155 | audio=11.8s | prep=0.02s | to_gpu=0.000s | generate=28.42s | RTFx=0.4
+[02:24:04]   Sample 0156 | audio=4.9s | prep=0.01s | to_gpu=0.000s | generate=12.86s | RTFx=0.4
+[02:24:36]   Sample 0157 | audio=13.6s | prep=0.01s | to_gpu=0.000s | generate=31.75s | RTFx=0.4
+[02:24:53]   Sample 0158 | audio=7.4s | prep=0.02s | to_gpu=0.000s | generate=17.31s | RTFx=0.4
+[02:25:19]   Sample 0159 | audio=12.9s | prep=0.01s | to_gpu=0.000s | generate=25.63s | RTFx=0.5
+[02:25:48]   Sample 0160 | audio=17.0s | prep=0.02s | to_gpu=0.000s | generate=28.98s | RTFx=0.6
+[02:26:17]   Sample 0161 | audio=15.7s | prep=0.02s | to_gpu=0.000s | generate=28.41s | RTFx=0.6
+[02:26:39]   Sample 0162 | audio=9.9s | prep=0.02s | to_gpu=0.000s | generate=21.75s | RTFx=0.5
+[02:26:57]   Sample 0163 | audio=7.9s | prep=0.01s | to_gpu=0.000s | generate=18.42s | RTFx=0.4
+[02:27:17]   Sample 0164 | audio=11.0s | prep=0.02s | to_gpu=0.000s | generate=20.08s | RTFx=0.5
+[02:27:28]   Sample 0165 | audio=8.7s | prep=0.01s | to_gpu=0.000s | generate=10.64s | RTFx=0.8
+[02:27:38]   Sample 0166 | audio=5.5s | prep=0.01s | to_gpu=0.000s | generate=9.52s | RTFx=0.6
+[02:27:55]   Sample 0167 | audio=7.6s | prep=0.01s | to_gpu=0.000s | generate=16.75s | RTFx=0.5
+[02:28:09]   Sample 0168 | audio=7.1s | prep=0.01s | to_gpu=0.000s | generate=14.53s | RTFx=0.5
+[02:28:23]   Sample 0169 | audio=4.9s | prep=0.02s | to_gpu=0.000s | generate=13.41s | RTFx=0.4
+[02:28:48]   Sample 0170 | audio=17.8s | prep=0.01s | to_gpu=0.000s | generate=24.53s | RTFx=0.7
+[02:29:10]   Sample 0171 | audio=8.0s | prep=0.02s | to_gpu=0.000s | generate=22.86s | RTFx=0.4
+[02:29:36]   Sample 0172 | audio=10.9s | prep=0.06s | to_gpu=0.000s | generate=25.08s | RTFx=0.4
+[02:29:49]   Sample 0173 | audio=9.4s | prep=0.02s | to_gpu=0.000s | generate=13.42s | RTFx=0.7
+[02:30:12]   Sample 0174 | audio=10.3s | prep=0.02s | to_gpu=0.000s | generate=22.30s | RTFx=0.5
+[02:30:25]   Sample 0175 | audio=9.8s | prep=0.01s | to_gpu=0.000s | generate=13.41s | RTFx=0.7
+[02:30:39]   Sample 0176 | audio=7.9s | prep=0.01s | to_gpu=0.000s | generate=13.97s | RTFx=0.6
+[02:31:02]   Sample 0177 | audio=13.5s | prep=0.02s | to_gpu=0.000s | generate=22.86s | RTFx=0.6
+[02:31:16]   Sample 0178 | audio=5.9s | prep=0.02s | to_gpu=0.000s | generate=13.41s | RTFx=0.4
+[02:31:42]   Sample 0179 | audio=11.5s | prep=0.01s | to_gpu=0.000s | generate=26.74s | RTFx=0.4
+[02:32:25]   Sample 0180 | audio=16.4s | prep=0.02s | to_gpu=0.000s | generate=42.92s | RTFx=0.4
+[02:32:46]   Sample 0181 | audio=9.2s | prep=1.50s | to_gpu=0.001s | generate=18.54s | RTFx=0.5
+[02:33:04]   Sample 0182 | audio=13.4s | prep=0.01s | to_gpu=0.000s | generate=17.86s | RTFx=0.8
+[02:33:14]   Sample 0183 | audio=4.6s | prep=0.02s | to_gpu=0.000s | generate=9.52s | RTFx=0.5
+[02:33:33]   Sample 0184 | audio=10.0s | prep=0.01s | to_gpu=0.000s | generate=18.97s | RTFx=0.5
+[02:33:49]   Sample 0185 | audio=6.4s | prep=0.02s | to_gpu=0.000s | generate=15.90s | RTFx=0.4
+[02:34:23]   Sample 0186 | audio=9.4s | prep=0.50s | to_gpu=0.000s | generate=33.38s | RTFx=0.3
+[02:34:38]   Sample 0187 | audio=9.7s | prep=0.03s | to_gpu=0.001s | generate=14.58s | RTFx=0.7
+[02:34:52]   Sample 0188 | audio=6.2s | prep=0.01s | to_gpu=0.000s | generate=13.41s | RTFx=0.5
+[02:35:01]   Sample 0189 | audio=4.4s | prep=0.01s | to_gpu=0.000s | generate=8.98s | RTFx=0.5
+[02:35:28]   Sample 0190 | audio=10.7s | prep=0.02s | to_gpu=0.000s | generate=27.85s | RTFx=0.4
+[02:35:38]   Sample 0191 | audio=4.6s | prep=0.01s | to_gpu=0.000s | generate=8.97s | RTFx=0.5
+[02:35:55]   Sample 0192 | audio=9.3s | prep=0.01s | to_gpu=0.000s | generate=17.30s | RTFx=0.5
+[02:36:22]   Sample 0193 | audio=13.7s | prep=0.01s | to_gpu=0.000s | generate=26.19s | RTFx=0.5
+[02:36:38]   Sample 0194 | audio=8.5s | prep=0.02s | to_gpu=0.000s | generate=16.74s | RTFx=0.5
+[02:36:59]   Sample 0195 | audio=14.3s | prep=0.01s | to_gpu=0.000s | generate=20.08s | RTFx=0.7
+[02:37:28]   Sample 0196 | audio=12.9s | prep=0.02s | to_gpu=0.000s | generate=28.97s | RTFx=0.4
+[02:38:01]   Sample 0197 | audio=13.5s | prep=0.02s | to_gpu=0.000s | generate=32.86s | RTFx=0.4
+[02:38:27]   Sample 0198 | audio=11.9s | prep=0.01s | to_gpu=0.000s | generate=26.19s | RTFx=0.5
+[02:38:48]   Sample 0199 | audio=10.3s | prep=0.02s | to_gpu=0.000s | generate=20.63s | RTFx=0.5
+[02:38:51]   └─ dataset.map(benchmark) — 200 samples : 4575.0s
+[02:38:51]   Collecte des résultats...
+[02:38:51]   └─ Collecte résultats : 0.0s
+[02:38:51]   └─ write_manifest : 0.0s
+[02:38:51]   Résultats sauvegardés : /scratch/jmartel/open_asr_leaderboard/voxtral/results/MODEL_-scratch-jmartel-models-Voxtral-Small-24B-GPTQ-W4A16_DATASET_-scratch-jmartel-datasets-fleurs_fleurs_test.jsonl
+[02:38:53]   WER=4.62% | RTFx=0.51
+[02:38:53]   └─ evaluate_dataset total (fleurs) : 4577.4s
+[03:17:55] 
+================================================================================
+[03:17:55] Dataset 2/4 : common_voice | split=test
+[03:17:55] ================================================================================
+[02:38:53] --- Chargement dataset : /scratch/jmartel/datasets/cv-corpus-24.0-2025-12-05/fr | split=test
+[02:38:53]   Format TSV détecté : /scratch/jmartel/datasets/cv-corpus-24.0-2025-12-05/fr/test.tsv
+[02:39:01]   └─ pd.read_csv (16196 lignes) : 7.5s
+[02:39:03]   Sous-échantillonnage : 16196 → 200 échantillons
+[02:39:03]   └─ Dataset.from_dict (200 samples) : 0.2s
+[02:39:03]   Dataset brut : Dataset({
+    features: ['audio', 'sentence'],
+    num_rows: 200
+})
+[02:39:03]   cast_column → Audio(16kHz)...
+[02:39:03]   └─ cast_column (lazy) : 0.0s
+[02:39:03]   map(normalize_fr) sur 200 samples...
+[02:39:03]   └─ map(normalize_fr) — 200 samples traités : 0.1s
+[02:39:03]   filter(is_target_text_in_range)...
+[02:39:03]   └─ filter : 200 → 200 samples : 0.0s
+[02:39:03]   └─ load_raw_dataset total : 10.4s
+[02:39:03]   Dataset final : Dataset({
+    features: ['audio', 'sentence', 'original_text', 'norm_text'],
+    num_rows: 200
+})
+[02:39:03] --- Inférence : common_voice | 200 samples | batch_size=8
+[02:39:03]   Lancement de dataset.map(benchmark)...
+[00:00:00] === run_multi.py démarré
+[00:00:00]   Python : 3.13.2
+[00:00:00]   PID : 763452
+[00:00:00]   Imports principaux (torch, transformers, datasets)...
+[00:00:00] Chargement de la métrique WER...
+[00:00:04]   └─ evaluate.load(wer) : 4.3s
+[00:34:51]   └─ run_eval importé : 2091.2s
+[00:34:51]   └─ eval_utils importé : 0.0s
+[00:34:51] === Modèle : /scratch/jmartel/models/Voxtral-Small-24B-2507
+[00:34:51]   max_eval_samples=200 | batch_size=8 | max_new_tokens=500
+[00:00:04] === Chargement du modèle : /scratch/jmartel/models/Voxtral-Small-24B-2507
+[00:00:04]   Chargement du processor...
+[00:00:25]   └─ AutoProcessor.from_pretrained : 21.1s
+[00:00:25]   Chargement des poids du modèle (device_map='auto')...
+[00:07:25]   └─ VoxtralForConditionalGeneration.from_pretrained : 420.3s
+[00:07:25]   └─ model.eval() : 0.0s
+[00:07:25]   Device d'inférence : cuda:0
+[00:07:25]   GPU 0 (NVIDIA A100-SXM4-40GB) : alloué=11.5Go / réservé=11.5Go / total=42.4Go
+[00:07:25]   GPU 1 (NVIDIA A100-SXM4-40GB) : alloué=13.3Go / réservé=13.3Go / total=42.4Go
+[00:07:25]   GPU 2 (NVIDIA A100-SXM4-40GB) : alloué=13.3Go / réservé=13.3Go / total=42.4Go
+[00:07:25]   GPU 3 (NVIDIA A100-SXM4-40GB) : alloué=10.3Go / réservé=10.3Go / total=42.4Go
+[00:07:25]   └─ Chargement modèle total : 441.6s
+[00:42:12]   Modèle prêt en 441.6s
+[00:42:12] 
+================================================================================
+[00:42:12] Dataset 1/4 : fleurs | split=test
+[00:42:12] ================================================================================
+[00:07:25] --- Chargement dataset : /scratch/jmartel/datasets/fleurs | split=test
+[00:07:25]   Format HuggingFace détecté : /scratch/jmartel/datasets/fleurs (config=fr_fr)
+[00:07:27]   └─ load_dataset (676 samples) : 1.0s
+[00:07:27]   Sous-échantillonnage : 676 → 200 échantillons
+[00:07:27]   └─ ds.select : 0.0s
+[00:07:27]   Dataset brut : Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id'],
+    num_rows: 200
+})
+[00:07:27]   cast_column → Audio(16kHz)...
+[00:07:27]   └─ cast_column (lazy) : 0.0s
+[00:07:27]   map(normalize_fr) sur 200 samples...
+[00:07:27]   └─ map(normalize_fr) — 200 samples traités : 0.4s
+[00:07:27]   filter(is_target_text_in_range)...
+[00:07:27]   └─ filter : 200 → 200 samples : 0.0s
+[00:07:27]   └─ load_raw_dataset total : 1.5s
+[00:07:27]   Dataset final : Dataset({
+    features: ['id', 'num_samples', 'path', 'audio', 'transcription', 'raw_transcription', 'gender', 'lang_id', 'language', 'lang_group_id', 'original_text', 'norm_text'],
+    num_rows: 200
+})
+[00:07:27] --- Inférence : fleurs | 200 samples | batch_size=8
+[00:07:27]   Lancement de dataset.map(benchmark)...
